@@ -32,7 +32,7 @@ export default function Footer() {
               <motion.a
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.9 }}
-                href="https://github.com"
+                href="https://github.com/DongMenKant"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/10 hover:border-white/20"
@@ -42,7 +42,7 @@ export default function Footer() {
               <motion.a
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.9 }}
-                href="https://linkedin.com"
+                href="https://blog.csdn.net/qq_43665890?spm=1000.2115.3001.5343"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/10 hover:border-white/20"
@@ -55,11 +55,19 @@ export default function Footer() {
               <motion.a
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.9 }}
-                href="mailto:contact@mjhesari.com"
+                href="mailto:15684199363@163.com"
                 className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/10 hover:border-white/20"
               >
                 <Mail size={28} className="text-gray-300 hover:text-white" />
               </motion.a>
+              <motion.button
+                whileHover={{ scale: 1.1, y: -2 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={scrollToTop}
+                className="p-4 bg-white/10 backdrop-blur-sm rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/10 hover:border-white/20"
+              >
+                <ArrowUp size={28} className="text-gray-300 hover:text-white" />
+              </motion.button>
             </div>
           </motion.div>
 
@@ -71,9 +79,9 @@ export default function Footer() {
             viewport={{ once: true }}
             className="text-center md:text-left"
           >
-            <h4 className="text-white font-black text-2xl mb-8">Quick Links</h4>
+            <h4 className="text-white font-black text-2xl mb-8">快速链接</h4>
             <div className="space-y-6">
-              {['Home', 'About', 'Projects', 'Contact'].map((link) => (
+              {['Home|主页', 'About|关于', 'Projects|项目'].map((link) => (
                 <button
                   key={link}
                   onClick={() => {
@@ -99,18 +107,18 @@ export default function Footer() {
             className="text-center md:text-left"
           >
             <h4 className="text-white font-black text-2xl mb-8">
-              Contact Info
+              联系方式
             </h4>
             <div className="space-y-6 text-gray-400">
-              <p className="text-xl">contact@mjhesari.com</p>
-              <p className="text-xl">+1 (555) 123-4567</p>
-              <p className="text-xl">Tehran, Iran</p>
+              <p className="text-xl">15684199363@163.com</p>
+              <p className="text-xl">15684199363</p>
+              <p className="text-xl">广东 广州</p>
             </div>
           </motion.div>
         </div>
 
         {/* Copyright */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -132,7 +140,7 @@ export default function Footer() {
               <ArrowUp size={28} className="text-gray-300 hover:text-white" />
             </motion.button>
           </div>
-        </motion.div>
+        </motion.div> */}
       </div>
     </footer>
   );

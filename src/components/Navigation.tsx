@@ -5,10 +5,10 @@ import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
 const navItems = [
-  { name: '首页', href: '#home' },
-  { name: '关于', href: '#about' },
-  { name: '项目', href: '#projects' },
-  { name: '联系', href: '#contact' },
+  { name: 'Home|首页', href: '#home' },
+  { name: 'About|关于', href: '#about' },
+  { name: 'Projects|项目', href: '#projects' },
+  // { name: '联系', href: '#contact' },
     // { name: 'Home', href: '#home' },
   // { name: 'About', href: '#about' },
   // { name: 'Projects', href: '#projects' },

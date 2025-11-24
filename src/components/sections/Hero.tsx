@@ -57,7 +57,7 @@ export default function Hero() {
           transition={{ duration: 1.2, delay: 0.6, ease: 'easeOut' }}
           className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-20"
         >
-          <a
+          {/* <a
             href="#contact"
             className="px-10 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-full hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25 text-lg"
           >
@@ -71,7 +71,7 @@ export default function Hero() {
           >
             <Download size={20} />
             Download CV
-          </a>
+          </a> */}
         </motion.div>
 
         <motion.div

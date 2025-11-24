@@ -1,0 +1,54 @@
+diff --git a/node_modules/@react-three/fiber/dist/events-d0449b76.cjs.dev.js b/node_modules/@react-three/fiber/dist/events-d0449b76.cjs.dev.js
+index 979fa46..034fb53 100644
+--- a/node_modules/@react-three/fiber/dist/events-d0449b76.cjs.dev.js
++++ b/node_modules/@react-three/fiber/dist/events-d0449b76.cjs.dev.js
+@@ -1261,7 +1261,7 @@ function createReconciler(config) {
+   reconciler.injectIntoDevTools({
+     bundleType: typeof process !== 'undefined' && process.env.NODE_ENV !== 'production' ? 1 : 0,
+     rendererPackageName: '@react-three/fiber',
+-    version: React__namespace.version
++    version: typeof React__namespace.version === "string" && React__namespace.version.trim() ? React__namespace.version : "19.1.0"
+   });
+   return reconciler;
+ }
+@@ -2449,3 +2449,4 @@ exports.useLoader = useLoader;
+ exports.useMutableCallback = useMutableCallback;
+ exports.useStore = useStore;
+ exports.useThree = useThree;
++
+diff --git a/node_modules/@react-three/fiber/dist/events-d0a20a9c.cjs.prod.js b/node_modules/@react-three/fiber/dist/events-d0a20a9c.cjs.prod.js
+index 1f1b4bf..17aac65 100644
+--- a/node_modules/@react-three/fiber/dist/events-d0a20a9c.cjs.prod.js
++++ b/node_modules/@react-three/fiber/dist/events-d0a20a9c.cjs.prod.js
+@@ -1261,7 +1261,7 @@ function createReconciler(config) {
+   reconciler.injectIntoDevTools({
+     bundleType: typeof process !== 'undefined' &&         "production" !== 'production' ? 1 : 0,
+     rendererPackageName: '@react-three/fiber',
+-    version: React__namespace.version
++    version: typeof React__namespace.version === "string" && React__namespace.version.trim() ? React__namespace.version : "19.1.0"
+   });
+   return reconciler;
+ }
+@@ -2449,3 +2449,4 @@ exports.useLoader = useLoader;
+ exports.useMutableCallback = useMutableCallback;
+ exports.useStore = useStore;
+ exports.useThree = useThree;
++
+diff --git a/node_modules/@react-three/fiber/dist/events-e3cb66e2.esm.js b/node_modules/@react-three/fiber/dist/events-e3cb66e2.esm.js
+index c01dd96..9d2fa8e 100644
+--- a/node_modules/@react-three/fiber/dist/events-e3cb66e2.esm.js
++++ b/node_modules/@react-three/fiber/dist/events-e3cb66e2.esm.js
+@@ -1235,7 +1235,7 @@ function createReconciler(config) {
+   reconciler.injectIntoDevTools({
+     bundleType: typeof process !== 'undefined' && process.env.NODE_ENV !== 'production' ? 1 : 0,
+     rendererPackageName: '@react-three/fiber',
+-    version: React.version
++    version: typeof React.version === "string" && React.version.trim() ? React.version : "19.1.0"
+   });
+   return reconciler;
+ }
+@@ -2390,3 +2390,4 @@ function createPointerEvents(store) {
+ }
+ 
+ export { useStore as A, Block as B, useThree as C, useFrame as D, ErrorBoundary as E, useGraph as F, useLoader as G, _roots as _, useMutableCallback as a, useIsomorphicLayoutEffect as b, createRoot as c, unmountComponentAtNode as d, extend as e, createPointerEvents as f, createEvents as g, flushGlobalEffects as h, isRef as i, addEffect as j, addAfterEffect as k, addTail as l, invalidate as m, advance as n, createPortal as o, flushSync as p, context as q, reconciler as r, applyProps as s, threeTypes as t, useBridge as u, getRootState as v, dispose as w, act as x, buildGraph as y, useInstanceHandle as z };
++

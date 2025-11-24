@@ -16,9 +16,9 @@ function ComputerModel(props: ComputerModelProps) {
   const [time, setTime] = useState(0);
   const [isTyping, setIsTyping] = useState(false);
 
-  // Animated text content
+  // 动画文本内容
   const [displayText, setDisplayText] = useState('');
-  const fullText = 'Hello World! 👋\nWelcome to my portfolio';
+  const fullText = 'Hello World! 👋\nWelcome to my personal website';
   const [textIndex, setTextIndex] = useState(0);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ function ComputerModel(props: ComputerModelProps) {
       }, 100);
       return () => clearTimeout(timer);
     } else {
-      // Reset after 3 seconds
+      // 3 秒后重置
       setTimeout(() => {
         setDisplayText('');
         setTextIndex(0);
@@ -46,7 +46,7 @@ function ComputerModel(props: ComputerModelProps) {
 
   useFrame((state) => {
     if (ref.current) {
-      // Smooth rotation and hover animation
+      // 平滑旋转与悬停动画
       ref.current.rotation.y = THREE.MathUtils.lerp(
         ref.current.rotation.y,
         hovered ? Math.PI / 6 : 0,
@@ -58,11 +58,11 @@ function ComputerModel(props: ComputerModelProps) {
         0.05
       );
 
-      // Gentle floating animation
+      // 轻柔漂浮动画
       ref.current.position.y += Math.sin(time * 2) * 0.01;
     }
 
-    // Screen glow effect
+    // 屏幕发光效果
     if (screenRef.current) {
       const material = screenRef.current.material as THREE.MeshStandardMaterial;
       material.emissiveIntensity = 0.2 + Math.sin(time * 3) * 0.1;
@@ -76,7 +76,7 @@ function ComputerModel(props: ComputerModelProps) {
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      {/* Monitor Screen with Glow */}
+      {/* 带辉光的显示器屏幕 */}
       <mesh castShadow receiveShadow position={[0, 0, 0]}>
         <boxGeometry args={[2.2, 1.4, 0.1]} />
         <meshStandardMaterial 
@@ -87,7 +87,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Monitor Frame with Better Material */}
+      {/* 材质更好的显示器边框 */}
       <mesh castShadow receiveShadow position={[0, 0, 0.06]}>
         <boxGeometry args={[2.4, 1.6, 0.05]} />
         <meshStandardMaterial 
@@ -98,7 +98,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Screen Display with Glow Effect */}
+      {/* 带辉光效果的屏幕显示区 */}
       <mesh ref={screenRef} position={[0, 0, 0.06]}>
         <planeGeometry args={[2, 1.2]} />
         <meshStandardMaterial 
@@ -108,7 +108,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Screen Content */}
+      {/* 屏幕内容 */}
       <Html position={[0, 0, 0.07]} center>
         <div className="w-80 h-48 bg-black/80 rounded-lg p-4 font-mono text-green-400 text-sm leading-relaxed">
           <div className="flex items-center gap-2 mb-2">
@@ -117,7 +117,7 @@ function ComputerModel(props: ComputerModelProps) {
               <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
             </div>
-            <span className="text-gray-400 text-xs">portfolio.js</span>
+            <span className="text-gray-400 text-xs">welcome.js</span>
           </div>
           <div className="whitespace-pre-line font-mono">
             {displayText}
@@ -126,7 +126,7 @@ function ComputerModel(props: ComputerModelProps) {
         </div>
       </Html>
 
-      {/* Monitor Stand with Glow */}
+      {/* 带辉光的显示器支架 */}
       <mesh castShadow receiveShadow position={[0, -0.8, 0]}>
         <cylinderGeometry args={[0.1, 0.1, 0.8, 8]} />
         <meshStandardMaterial 
@@ -137,7 +137,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Monitor Base with LED Ring */}
+      {/* 带 LED 光环的显示器底座 */}
       <mesh castShadow receiveShadow position={[0, -1.2, 0]}>
         <cylinderGeometry args={[0.4, 0.4, 0.1, 8]} />
         <meshStandardMaterial 
@@ -148,7 +148,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* LED Ring around base */}
+      {/* 底座周围的 LED 光环 */}
       <mesh position={[0, -1.15, 0]}>
         <ringGeometry args={[0.35, 0.45, 32]} />
         <meshStandardMaterial 
@@ -160,7 +160,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Keyboard with Glowing Keys */}
+      {/* 带发光按键的键盘 */}
       <mesh castShadow receiveShadow position={[0, -1.8, 0.5]}>
         <boxGeometry args={[2.8, 0.1, 0.8]} />
         <meshStandardMaterial 
@@ -171,7 +171,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Keyboard Keys */}
+      {/* 键盘按键 */}
       {Array.from({ length: 8 }, (_, i) => (
         <mesh key={i} castShadow position={[-1.2 + i * 0.3, -1.75, 0.5]}>
           <boxGeometry args={[0.2, 0.05, 0.2]} />
@@ -183,7 +183,7 @@ function ComputerModel(props: ComputerModelProps) {
         </mesh>
       ))}
 
-      {/* Mouse with Glow */}
+      {/* 带辉光的鼠标 */}
       <mesh castShadow receiveShadow position={[1.2, -1.8, 0.5]}>
         <sphereGeometry args={[0.15, 16, 16]} />
         <meshStandardMaterial 
@@ -194,7 +194,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Mouse LED */}
+      {/* 鼠标 LED */}
       <mesh position={[1.2, -1.8, 0.65]}>
         <sphereGeometry args={[0.02, 8, 8]} />
         <meshStandardMaterial 
@@ -204,7 +204,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Desk with Subtle Glow */}
+      {/* 带柔和辉光的桌面 */}
       <mesh castShadow receiveShadow position={[0, -2.2, 0]}>
         <boxGeometry args={[4, 0.2, 2]} />
         <meshStandardMaterial 
@@ -215,7 +215,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Desk Edge Glow */}
+      {/* 桌面边缘辉光 */}
       <mesh position={[0, -2.1, 0]}>
         <boxGeometry args={[4.2, 0.02, 2.2]} />
         <meshStandardMaterial 
@@ -227,7 +227,7 @@ function ComputerModel(props: ComputerModelProps) {
         />
       </mesh>
 
-      {/* Floating Particles */}
+      {/* 漂浮粒子 */}
       {Array.from({ length: 20 }, (_, i) => (
         <mesh key={i} position={[
           Math.sin(time + i) * 3,
@@ -258,7 +258,7 @@ export default function Computer() {
       >
         <color attach="background" args={['#0a0a0a']} />
 
-        {/* Enhanced Lighting */}
+        {/* 增强照明 */}
         <ambientLight intensity={0.2} />
         <spotLight
           position={[10, 10, 10]}
@@ -282,7 +282,7 @@ export default function Computer() {
 
         <ComputerModel position={[0, 0, 0]} />
 
-        {/* Enhanced Contact Shadows */}
+        {/* 增强接触阴影 */}
         <ContactShadows
           position={[0, -2.5, 0]}
           opacity={0.6}
@@ -294,7 +294,7 @@ export default function Computer() {
 
         <Environment preset="city" />
 
-        {/* Enhanced Orbit Controls */}
+        {/* 增强轨道控制 */}
         <OrbitControls
           enableZoom={false}
           enablePan={false}

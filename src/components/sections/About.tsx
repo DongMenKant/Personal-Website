@@ -76,9 +76,9 @@ export default function About() {
             viewport={{ once: true }}
           >
             <h3 className="text-3xl sm:text-4xl md:text-5xl font-black mb-12 text-white">
-              Turning Ideas Into{' '}
+              {/* Turning Ideas Into{' '} */}
               <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                Reality
+                {/* Reality */}技能介绍
               </span>
             </h3>
             <div className="space-y-8 text-gray-300 text-lg leading-relaxed font-light">
