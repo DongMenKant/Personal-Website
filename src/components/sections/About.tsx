@@ -1,14 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Code, Puzzle, Globe, Smartphone, Palette, Blend } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import type { Graph as G6Graph } from '@antv/g6';
+import { Code, Puzzle, Globe, Smartphone, Palette, X, Blend } from 'lucide-react';
 
 const skills = [
   {
     name: 'Web开发',
     icon: Code,
     color: 'from-blue-500 to-cyan-500',
-    description: 'Vue3, Next.js, TypeScript',
+    description: 'Vue3, React, Next.js, TypeScript',
   },
   {
     name: '组件库',
@@ -26,7 +28,7 @@ const skills = [
     name: '建模工具',
     icon: Blend,
     color: 'from-purple-500 to-pink-500',
-    description: 'Blender, UE',
+    description: 'Blender, Unity, UE',
   },
   {
     name: '移动端',
@@ -38,11 +40,138 @@ const skills = [
     name: 'Webgis',
     icon: Globe,
     color: 'from-yellow-500 to-orange-500',
-    description: 'Leaflet',
+    description: 'Leaflet, QGIS',
   },
 ];
 
+function SkillGraph() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const graphRef = useRef<G6Graph | null>(null);
+  const [graphError, setGraphError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const controller = new AbortController();
+
+    const initGraph = async () => {
+      try {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const [{ Graph }, data] = await Promise.all([
+          import('@antv/g6'),
+          fetch('/G6/collection.json', { signal: controller.signal }).then((res) => res.json()),
+        ]);
+
+        const groupedNodesByCluster: Record<string, string[]> = (data?.nodes ?? []).reduce(
+          (acc: Record<string, string[]>, node: any) => {
+            const cluster = node.data.cluster;
+            acc[cluster] = acc[cluster] || [];
+            acc[cluster].push(node.id);
+            return acc;
+          },
+          {},
+        );
+
+        const createStyle = (baseColor: string) => ({
+          fill: baseColor,
+          stroke: baseColor,
+          labelFill: '#fff',
+          labelPadding: 2,
+          labelBackgroundFill: baseColor,
+          labelBackgroundRadius: 5,
+        });
+
+        const clusterColors: Record<string, string> = {
+          框架: '#1783FF',
+          组件库: '#00C9C9',
+          可视化: '#F08F56',
+          建模: '#D580FF',
+          WebGis: '#9572f3ff',
+        };
+
+        const hullPlugins = Object.keys(clusterColors).map((clusterKey) => ({
+          key: `hull-${clusterKey}`,
+          type: 'hull',
+          members: groupedNodesByCluster[clusterKey] || [],
+          labelText: `${clusterKey}`,
+          ...createStyle(clusterColors[clusterKey]),
+        }));
+
+        const width = container.clientWidth || 800;
+        const height = container.clientHeight || 360;
+
+        const graph = new Graph({
+          container,
+          width,
+          height,
+          data,
+          behaviors: ['zoom-canvas', 'drag-canvas', 'drag-element'],
+          node: {
+            style: {
+              labelText: (d) => d?.data?.name || d.id,
+              labelPlacement: 'middle',
+              labelFill: '#fff',
+              labelPadding: 4,
+              labelFontSize: 12,
+            },
+            palette: { field: 'cluster' },
+          },
+          layout: {
+            type: 'force',
+            preventOverlap: true,
+            linkDistance: (edge:{source:string, target:string}) => {
+              if (edge.source === 'node0' || edge.target === 'node0') {
+                return 140;
+              }
+              return 60;
+            },
+          },
+          plugins: hullPlugins,
+          autoFit: 'center',
+        });
+
+        if (cancelled) {
+          graph.destroy?.();
+          return;
+        }
+
+        graph.render();
+        graphRef.current = graph;
+        setGraphError(null);
+      } catch (error: any) {
+        if (!cancelled) {
+          setGraphError(error?.message || '图表渲染失败');
+        }
+      }
+    };
+
+    requestAnimationFrame(initGraph);
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+      graphRef.current?.destroy?.();
+      graphRef.current = null;
+    };
+  }, []);
+
+  return (
+    <div className="mt-6 h-[600px] w-full overflow-hidden rounded-xl border border-white/15 bg-white/5 flex items-center justify-center">
+      {graphError ? (
+        <p className="text-sm text-red-200">{graphError}</p>
+      ) : (
+        <div ref={containerRef} className="h-full w-full" />
+      )}
+    </div>
+  );
+}
+
+
 export default function About() {
+  const [showSkillModal, setShowSkillModal] = useState(false);
+  const closeModal = () => setShowSkillModal(false);
+
   return (
     <section
       id="about"
@@ -75,18 +204,32 @@ export default function About() {
             transition={{ duration: 1 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black mb-12 text-white">
-              {/* Turning Ideas Into{' '} */}
-              <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                {/* Reality */}技能介绍
+            <motion.h3
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              animate={{
+              y: [0, -6, 0],
+              boxShadow: [
+              '0 0 0px rgba(99,102,241,0.0)',
+              '0 10px 30px rgba(99,102,241,0.35)',
+              '0 0 0px rgba(99,102,241,0.0)',
+              ],
+              }}
+              transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 0.4, ease: 'easeInOut' }}
+              onClick={() => setShowSkillModal(true)}
+              className="text-3xl sm:text-4xl md:text-5xl font-black mb-8 text-white cursor-pointer select-none inline-flex items-center gap-3 justify-center"
+              >
+              <span className="relative bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                <span className="absolute inset-0 -z-10 blur-2xl bg-gradient-to-r from-blue-500/25 via-purple-500/20 to-pink-500/25 animate-pulse" />
+                技能介绍
               </span>
-            </h3>
+            </motion.h3>
             <div className="space-y-8 text-gray-300 text-lg leading-relaxed font-light">
               <p>
-                我是一名前端开发工程师，热衷于助力企业数字化、智能化转型，打造沉浸式数字体验。目前，我具备1-2年的前端开发工作经验，凭借 Vue3、React、Next.js、Uni-app、Three.js 和现代 Web 技术方面的专业知识，我能够通过简洁的代码和创新的解决方案，将创意变为现实。
+                我是一名软件开发工程师，热衷于助力企业数字化、智能化转型，打造沉浸式数字体验。目前，我具备1-2年的软件开发（前端）工作经验，凭借 Vue3、React、Next.js、Uni-app、Three.js 和现代 Web 技术方面的专业知识，我能够通过简洁的代码和创新的解决方案，将创意变为现实。
               </p>
               <p>
-                我对 3D 视觉呈现与交互充满热情，具备 WebGL 基础，并自学了 Blender 建模与 UE 游戏编程，了解建模流程及着色器等核心概念，能够参与三维场景的构建与实现。
+                我对 3D 视觉呈现与交互充满热情，具备 WebGL 基础，并自学了 Blender 建模与 Unity 游戏编程，了解建模流程及着色器等核心概念，能够参与三维场景的构建与实现。
               </p>
               <p>
                 在日常工作中，我积极拥抱 AI 工具，如 CodeX、Trea、Framer AI 等，持续探索人机协作的开发模式以提升效率。工作之外，我乐于参与开源项目、钻研新兴技术，并与开发者社区积极交流、分享心得，共同成长。
@@ -165,6 +308,35 @@ export default function About() {
           </div>
         </motion.div>
       </div>
+
+      {showSkillModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label="技能介绍弹窗"
+          onClick={closeModal}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+            className="relative max-w-6xl w-full rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-10 text-white shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={closeModal}
+              className="absolute right-4 top-4 text-sm px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              aria-label="关闭技能介绍弹窗"
+            >
+              <X size={20} />
+            </button>
+            <h4 className="text-2xl font-bold mb-4">技能介绍</h4>
+            <SkillGraph />
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }

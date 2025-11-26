@@ -1,11 +1,8 @@
 ﻿'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
-import { Box3, MeshStandardMaterial, Vector3, type Group } from 'three';
-import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ExternalLink, Github, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const projects = [
@@ -25,7 +22,7 @@ const projects = [
     live: 'https://example.com',
     featured: true,
     model: undefined,
-    screenshots: ['/imgs/AI1.png', '/imgs/AI2.png', '/imgs/AI3.png'],
+    screenshots: ['/imgs/XJ0.png', '/imgs/XJ1.jpg', '/imgs/XJ2.jpg', '/imgs/XJ3.jpg', '/imgs/XJ4.jpg', '/imgs/XJ5.jpg'],
   },
   {
     title: '工业AI视觉算法平台',
@@ -37,7 +34,7 @@ const projects = [
     live: 'https://www.npmjs.com/package/canvas-select-plus',
     featured: true,
     model: undefined,
-    screenshots: ['/imgs/AI1.png','/imgs/AI2.png', '/imgs/AI3.png', '/imgs/AI4.png','/imgs/AI5.png'],
+    screenshots: ['/imgs/AI0.png', '/imgs/AI1.png','/imgs/AI2.png', '/imgs/AI3.png', '/imgs/AI4.png','/imgs/AI5.png'],
   },
   {
     title: '农村集体三资管理平台',
@@ -52,174 +49,55 @@ const projects = [
     screenshots: ['/imgs/SZ1.png'],
   },
   {
-    title: 'Task Management App',
+    title: '健身日志APP',
     description:
-      'Real-time task management application with collaborative features. Built with React, Node.js, and Socket.io for real-time updates.',
-    technologies: ['React', 'Node.js', 'Socket.io', 'MongoDB', 'Express'],
+      '自研开发健身日志APP，基于Pixso生成设计稿，并使用Uni-app + WotUI + UnoCSS框架开发，用于设置训练计划和记录训练日志。',
+    technologies: ['Uni-app', 'WotUI', ' Next.js', 'MongoDB'],
     image: '/imgs/AI4.png',
-    github: 'https://github.com',
-    live: 'https://example.com',
+    github: 'https://github.com/DongMenKant/fitness-diary-vue-uniapp',
+    live: '',
     featured: false,
     model: '/models/GasolineBarrel.glb',
-    screenshots: ['/imgs/AI1.png', '/imgs/AI4.png'],
+    screenshots: ['/imgs/JS1.png', '/imgs/JS2.png'],
   },
   {
-    title: 'Weather Dashboard',
+    title: 'Canvas-Select-Plus',
     description:
-      'Beautiful weather dashboard with real-time data and interactive charts. Integrates with OpenWeather API for accurate weather information.',
-    technologies: ['React', 'Chart.js', 'OpenWeather API', 'Tailwind CSS'],
+      '基于Canvas开发的2D图像标注组件，简单轻量，支持矩形、多边形、点、折线、圆形、Mask标注，支持复制、撤销、重做、刷子、钢笔等操作，配备SAM智能标注接口。',
+    technologies: ['Canvas', 'JavaScript'],
     image: '/imgs/AI5.png',
-    github: 'https://github.com',
-    live: 'https://example.com',
+    github: 'https://github.com/DongMenKant/canvas-select-plus',
+    live: 'https://dongmenkant.github.io/canvas-select-plus/',
     featured: false,
     model: '/models/Roadblock.glb',
-    screenshots: ['/imgs/AI2.png', '/imgs/AI5.png'],
+    screenshots: ['/imgs/CSP.png'],
   },
   {
-    title: 'AI Chat Application',
+    title: 'UE搭建电影级别场景',
     description:
-      'Modern chat application powered by AI with real-time messaging, file sharing, and intelligent responses.',
-    technologies: ['Next.js', 'OpenAI API', 'WebSocket', 'PostgreSQL'],
+      '通过UE5.5.2引擎，利用开源素材和Tripo3D辅助生成的模型，搭建电影级公路场景。',
+    technologies: ['UE5', 'Tripo 3D'],
     image: '/imgs/AI1.png',
-    github: 'https://github.com',
-    live: 'https://example.com',
+    github: '',
+    live: '',
     featured: false,
-    model: '',
-    screenshots: ['/imgs/AI3.png', '/imgs/AI4.png'],
+    model: undefined,
+    screenshots: ['/imgs/UE1.png', '/imgs/UE2.png', '/imgs/UE3.png', '/imgs/UE4.png'],
   },
   {
-    title: 'Crypto Tracker',
+    title: '2D像素风横版闯关游戏',
     description:
-      'Real-time cryptocurrency tracking application with price alerts, portfolio management, and market analysis.',
-    technologies: ['React', 'CoinGecko API', 'Chart.js', 'Firebase'],
-    image: '/imgs/AI2.png',
-    github: 'https://github.com',
-    live: 'https://example.com',
+      '通过Unity引擎，利用开源素材开发的像素风游戏，涉及player动画、音效、转场。',
+    technologies: ['Unity', 'C#'],
+    image: '/imgs/AI1.png',
+    github: '',
+    live: '',
     featured: false,
-    model: '',
-    screenshots: ['/imgs/AI4.png', '/imgs/AI5.png'],
+    model: undefined,
+    screenshots: ['/imgs/UE1.png', '/imgs/UE2.png', '/imgs/UE3.png', '/imgs/UE4.png'],
   },
 ];
 
-function ProjectModelCanvas({ modelUrl }: { modelUrl?: string }) {
-  const [model, setModel] = useState<Group | null>(null);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!modelUrl) {
-      setModel(null);
-      setStatus('idle');
-      setErrorMessage(null);
-      return;
-    }
-
-    let cancelled = false;
-    const loader = new GLTFLoader(); // \u4f7f\u7528 GLTFLoader \u8bfb\u53d6 glb \u6a21\u578b
-    setStatus('loading');
-    setErrorMessage(null);
-    setModel(null);
-
-    loader.load(
-      modelUrl,
-      (gltf) => {
-        if (cancelled) {
-          return;
-        }
-
-        const scene = (gltf as GLTF).scene || (gltf as GLTF).scenes?.[0];
-        if (!scene) {
-          setStatus('error');
-          setErrorMessage('\u6a21\u578b\u5185\u5bb9\u4e3a\u7a7a');
-          return;
-        }
-
-        const box = new Box3();
-        const center = new Vector3();
-        const size = new Vector3();
-
-        scene.traverse((child) => {
-          if ((child as any).isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-            if (!child.material) {
-              child.material = new MeshStandardMaterial({ color: 0xffffff });
-            } else if ((child.material as any).color) {
-              (child.material as any).color.convertSRGBToLinear();
-            }
-          }
-        });
-
-        box.setFromObject(scene);
-        box.getSize(size);
-        const maxAxis = Math.max(size.x, size.y, size.z) || 1;
-        const targetSize = 3;
-        const scale = targetSize / maxAxis;
-        scene.scale.setScalar(scale);
-
-        box.setFromObject(scene);
-        box.getCenter(center);
-        scene.position.sub(center);
-
-        setModel(scene);
-        setStatus('ready');
-      },
-      undefined,
-      (error) => {
-        if (cancelled) {
-          return;
-        }
-        setStatus('error');
-        setErrorMessage(error.message || '\u6a21\u578b\u52a0\u8f7d\u5931\u8d25');
-      },
-    );
-
-    return () => {
-      cancelled = true;
-    };
-  }, [modelUrl]);
-
-  if (!modelUrl) {
-    return (
-      <div className="mb-6 flex h-56 items-center justify-center rounded-xl border border-dashed border-white/20 bg-white/5 text-sm text-gray-300">
-        No model preview available
-      </div>
-    );
-  }
-
-  if (status === 'error') {
-    return (
-      <div className="mb-6 flex h-56 items-center justify-center rounded-xl border border-dashed border-red-400/40 bg-red-500/10 text-sm text-red-200">
-        Model failed to load: {errorMessage}
-      </div>
-    );
-  }
-
-  return (
-    <div className="mb-6 h-56 overflow-hidden rounded-xl border border-white/10 bg-black/40 relative">
-      {status === 'loading' && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/60 text-sm text-gray-200">
-          Loading model...
-        </div>
-      )}
-      {model ? (
-        <Canvas camera={{ position: [2.5, 2.5, 2.5], fov: 50 }} shadows dpr={[1, 2]}>
-<color attach="background" args={['#dcdcdc']} />
-          <hemisphereLight skyColor={0xffffff} groundColor={0x101010} intensity={0.8} />
-          <directionalLight castShadow position={[6, 10, 6]} intensity={1.6}>
-            <orthographicCamera attach="shadow-camera" args={[-10, 10, 10, -10, 1, 40]} />
-          </directionalLight>
-          <spotLight position={[0, 6, 4]} angle={0.45} penumbra={0.5} intensity={1.2} castShadow />
-          <ambientLight intensity={0.6} /> {/* \u73af\u5883\u5149\u63d0\u5347\u57fa\u7840\u4eae\u5ea6 */}
-          <primitive object={model} />
-          <OrbitControls enablePan={false} makeDefault enableZoom autoRotate autoRotateSpeed={1.4} />
-        </Canvas>
-      ) : (
-        status === 'loading' && <div className="h-full w-full" />
-      )}
-    </div>
-  );
-}
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
@@ -365,10 +243,12 @@ export default function Projects() {
               <div className="relative flex flex-col items-center">
                 {hasScreenshots ? (
                   <div className="relative mx-auto h-[550px] w-[1150px] overflow-hidden rounded-2xl border border-white/10 bg-black/40">
-                    <img
+                    <Image
                       src={currentScreenshotSrc ?? ''}
                       alt={`${selectedProject.title} preview image`}
-                      className="h-full w-full object-cover transition-transform duration-500"
+                      fill
+                      sizes="(min-width: 1280px) 1150px, 100vw"
+                      className="object-cover transition-transform duration-500"
                     />
                   </div>
                 ) : (
@@ -416,12 +296,14 @@ export default function Projects() {
                 viewport={{ once: true }}
                 className="group relative bg-white/5 backdrop-blur-sm rounded-3xl overflow-hidden hover:bg-white/10 transition-all duration-500 border border-white/10 hover:border-white/20"
               >
-                <div className="aspect-video bg-gradient-to-br from-blue-500/20 to-purple-500/20 relative overflow-hidden">
-                  <img
+                <div className="aspect-video bg-gradient-to-br from-blue-500/20 to-purple-500/20 relative overflow-hidden mb-4">
+                  <Image
                     src={project.screenshots?.[0] ?? project.image}
                     alt={`${project.title} 预览图`}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    fill
+                    sizes="(min-width: 1024px) 33vw, 100vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    priority={index === 0}
                   />
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 mix-blend-overlay opacity-60"></div>
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6">
@@ -510,8 +392,28 @@ export default function Projects() {
                   viewport={{ once: true }}
                   className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/10 transition-all duration-300 border border-white/10 hover:border-white/20"
                 >
-                  <ProjectModelCanvas modelUrl={project.model} />
-                  <h4 className="text-2xl font-black text-white mb-4">
+                  {/* <ProjectModelCanvas modelUrl={project.model} /> */}
+                  <div className="aspect-video bg-gradient-to-br from-blue-500/20 to-purple-500/20 relative overflow-hidden">
+                    <Image
+                      src={project.screenshots?.[0] ?? project.image}
+                      alt={`${project.title} 预览图`}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, 100vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 mix-blend-overlay opacity-60"></div>
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenPreview(project)}
+                        className="p-4 bg-white/20 rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110"
+                        aria-label={`Preview ${project.title} gallery`}
+                      >
+                        <Eye size={28} className="text-white" />
+                      </button>
+                    </div>
+                  </div>
+                  <h4 className="text-2xl font-black text-white mt-4 mb-4">
                     {project.title}
                   </h4>
                   <p className="text-gray-300 text-base mb-6 leading-relaxed font-light">
@@ -528,7 +430,7 @@ export default function Projects() {
                     ))}
                   </div>
                   <div className="flex gap-4">
-                    <a
+                    {project.github&&(<a
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -538,8 +440,8 @@ export default function Projects() {
                         size={18}
                         className="text-gray-300 hover:text-white"
                       />
-                    </a>
-                    <a
+                    </a>)}
+                    {project.live&&(<a
                       href={project.live}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -549,7 +451,7 @@ export default function Projects() {
                         size={18}
                         className="text-gray-300 hover:text-white"
                       />
-                    </a>
+                    </a>)}
                   </div>
                 </motion.div>
               ))}

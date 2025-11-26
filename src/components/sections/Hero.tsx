@@ -42,7 +42,7 @@ export default function Hero() {
           className="mb-16"
         >
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-8 text-gray-300 tracking-wide">
-            前端开发工程师
+            软件开发工程师
           </h2>
           <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 max-w-4xl mx-auto leading-relaxed font-light">
             {/* I create exceptional digital experiences that combine cutting-edge

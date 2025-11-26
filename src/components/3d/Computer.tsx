@@ -249,6 +249,29 @@ function ComputerModel(props: ComputerModelProps) {
 }
 
 export default function Computer() {
+  const [webglSupported, setWebglSupported] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const canvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
+    const gl =
+      canvas?.getContext('webgl') ||
+      canvas?.getContext('experimental-webgl') ||
+      canvas?.getContext('webgl2');
+    setWebglSupported(Boolean(gl));
+
+    if (gl && 'getExtension' in gl) {
+      (gl as WebGLRenderingContext).getExtension('WEBGL_lose_context')?.loseContext?.();
+    }
+  }, []);
+
+  if (webglSupported === false) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-black text-gray-200">
+        当前环境不支持 WebGL，无法显示 3D 背景
+      </div>
+    );
+  }
+
   return (
     <div className="h-screen w-full">
       <Canvas

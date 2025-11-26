@@ -1,0 +1,210 @@
+{
+  "nodes": [
+    {
+      "id": "Vue",
+      "data": {
+        "cluster": "框架"
+      },
+      "style": {
+        "size": 80
+      }
+    },
+    {
+      "id": "ElementPlus",
+      "data": {
+        "cluster": "组件库"
+      },
+      "style": {
+        "size": 80
+      }
+    },
+    {
+      "id": "Echarts",
+      "data": {
+        "cluster": "可视化"
+      },
+      "style": {
+        "size": 80
+      }
+    },
+    {
+      "id": "Three.js",
+      "data": {
+        "cluster": "建模"
+      },
+      "style": {
+        "size": 80
+      }
+    },
+    {
+      "id": "Leaflet",
+      "data": {
+        "cluster": "WebGis"
+      },
+      "style": {
+        "size": 80
+      }
+    },
+    {
+      "id": "Uni-app",
+      "data": {
+        "cluster": "框架"
+      },
+      "style": {
+        "size": 50
+      }
+    },
+    {
+      "id": "React",
+      "data": {
+        "cluster": "框架"
+      },
+      "style": {
+        "size": 50
+      }
+    },
+    {
+      "id": "Next.js",
+      "data": {
+        "cluster": "框架"
+      },
+      "style": {
+        "size": 50
+      }
+    },
+    {
+      "id": "DataV",
+      "data": {
+        "cluster": "组件库"
+      },
+      "style": {
+        "size": 50
+      }
+    },
+    {
+      "id": "WtoUI",
+      "data": {
+        "cluster": "组件库"
+      },
+      "style": {
+        "size": 50
+      }
+    },
+    {
+      "id": "AntV",
+      "data": {
+        "cluster": "可视化"
+      },
+      "style": {
+        "size": 30
+      }
+    },
+    {
+      "id": "Canvas",
+      "data": {
+        "cluster": "可视化"
+      },
+      "style": {
+        "size": 80
+      }
+    },
+    {
+      "id": "blender",
+      "data": {
+        "cluster": "建模"
+      },
+      "style": {
+        "size": 50
+      }
+    },
+    {
+      "id": "Unity",
+      "data": {
+        "cluster": "建模"
+      },
+      "style": {
+        "size": 50
+      }
+    },
+    {
+      "id": "UE",
+      "data": {
+        "cluster": "建模"
+      },
+      "style": {
+        "size": 30
+      }
+    },
+    {
+      "id": "QGIS",
+      "data": {
+        "cluster": "WebGis"
+      },
+      "style": {
+        "size": 50
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "Vue",
+      "target": "Uni-app"
+    },
+    {
+      "source": "Vue",
+      "target": "React"
+    },
+    {
+      "source": "Vue",
+      "target": "Next.js"
+    },
+    {
+      "source": "Vue",
+      "target": "ElementPlus"
+    },
+    {
+      "source": "Vue",
+      "target": "Echarts"
+    },
+    {
+      "source": "Vue",
+      "target": "Three.js"
+    },
+    {
+      "source": "Vue",
+      "target": "Leaflet"
+    },
+    {
+      "source": "ElementPlus",
+      "target": "DataV"
+    },
+    {
+      "source": "ElementPlus",
+      "target": "WtoUI"
+    },
+    {
+      "source": "Echarts",
+      "target": "AntV"
+    },
+    {
+      "source": "Echarts",
+      "target": "Canvas"
+    },
+    {
+      "source": "Three.js",
+      "target": "blender"
+    },
+    {
+      "source": "Three.js",
+      "target": "Unity"
+    },
+    {
+      "source": "Three.js",
+      "target": "UE"
+    },
+    {
+      "source": "Leaflet",
+      "target": "QGIS"
+    }
+  ]
+}

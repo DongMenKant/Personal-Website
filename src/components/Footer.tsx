@@ -25,8 +25,7 @@ export default function Footer() {
               DM Kant
             </h3>
             <p className="text-gray-400 text-xl leading-relaxed mb-8 font-light">
-              Full Stack Developer passionate about creating amazing digital
-              experiences with cutting-edge technologies.
+              软件开发工程师，致力于通过AI与可视化技术，创造直观、智能的人机交互体验。
             </p>
             <div className="flex gap-6">
               <motion.a
