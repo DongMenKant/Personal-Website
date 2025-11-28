@@ -1,9 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
-import type { Graph as G6Graph } from '@antv/g6';
+import { useState } from 'react';
 import { Code, Puzzle, Globe, Smartphone, Palette, X, Blend } from 'lucide-react';
+import SkillGraph from '@/components/g6/SkillGraph';
 
 const skills = [
   {
@@ -43,130 +43,6 @@ const skills = [
     description: 'Leaflet, QGIS',
   },
 ];
-
-function SkillGraph() {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const graphRef = useRef<G6Graph | null>(null);
-  const [graphError, setGraphError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    const controller = new AbortController();
-
-    const initGraph = async () => {
-      try {
-        const container = containerRef.current;
-        if (!container) return;
-
-        const [{ Graph }, data] = await Promise.all([
-          import('@antv/g6'),
-          fetch('/G6/collection.json', { signal: controller.signal }).then((res) => res.json()),
-        ]);
-
-        const groupedNodesByCluster: Record<string, string[]> = (data?.nodes ?? []).reduce(
-          (acc: Record<string, string[]>, node: any) => {
-            const cluster = node.data.cluster;
-            acc[cluster] = acc[cluster] || [];
-            acc[cluster].push(node.id);
-            return acc;
-          },
-          {},
-        );
-
-        const createStyle = (baseColor: string) => ({
-          fill: baseColor,
-          stroke: baseColor,
-          labelFill: '#fff',
-          labelPadding: 2,
-          labelBackgroundFill: baseColor,
-          labelBackgroundRadius: 5,
-        });
-
-        const clusterColors: Record<string, string> = {
-          框架: '#1783FF',
-          组件库: '#00C9C9',
-          可视化: '#F08F56',
-          建模: '#D580FF',
-          WebGis: '#9572f3ff',
-        };
-
-        const hullPlugins = Object.keys(clusterColors).map((clusterKey) => ({
-          key: `hull-${clusterKey}`,
-          type: 'hull',
-          members: groupedNodesByCluster[clusterKey] || [],
-          labelText: `${clusterKey}`,
-          ...createStyle(clusterColors[clusterKey]),
-        }));
-
-        const width = container.clientWidth || 800;
-        const height = container.clientHeight || 360;
-
-        const graph = new Graph({
-          container,
-          width,
-          height,
-          data,
-          behaviors: ['zoom-canvas', 'drag-canvas', 'drag-element'],
-          node: {
-            style: {
-              labelText: (d) => d?.data?.name || d.id,
-              labelPlacement: 'middle',
-              labelFill: '#fff',
-              labelPadding: 4,
-              labelFontSize: 12,
-            },
-            palette: { field: 'cluster' },
-          },
-          layout: {
-            type: 'force',
-            preventOverlap: true,
-            linkDistance: (edge:{source:string, target:string}) => {
-              if (edge.source === 'node0' || edge.target === 'node0') {
-                return 140;
-              }
-              return 60;
-            },
-          },
-          plugins: hullPlugins,
-          autoFit: 'center',
-        });
-
-        if (cancelled) {
-          graph.destroy?.();
-          return;
-        }
-
-        graph.render();
-        graphRef.current = graph;
-        setGraphError(null);
-      } catch (error: any) {
-        if (!cancelled) {
-          setGraphError(error?.message || '图表渲染失败');
-        }
-      }
-    };
-
-    requestAnimationFrame(initGraph);
-
-    return () => {
-      cancelled = true;
-      controller.abort();
-      graphRef.current?.destroy?.();
-      graphRef.current = null;
-    };
-  }, []);
-
-  return (
-    <div className="mt-6 h-[600px] w-full overflow-hidden rounded-xl border border-white/15 bg-white/5 flex items-center justify-center">
-      {graphError ? (
-        <p className="text-sm text-red-200">{graphError}</p>
-      ) : (
-        <div ref={containerRef} className="h-full w-full" />
-      )}
-    </div>
-  );
-}
-
 
 export default function About() {
   const [showSkillModal, setShowSkillModal] = useState(false);
@@ -309,7 +185,41 @@ export default function About() {
         </motion.div>
       </div>
 
-      {showSkillModal && (
+      <div
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6 transition-opacity duration-200 ${
+          showSkillModal ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="技能介绍弹窗"
+        aria-hidden={!showSkillModal}
+        onClick={closeModal}
+      >
+        <motion.div
+          initial={false}
+          animate={
+            showSkillModal
+              ? { opacity: 1, scale: 1, y: 0 }
+              : { opacity: 0, scale: 0.95, y: 20 }
+          }
+          transition={{ duration: 0.2 }}
+          className="relative max-w-6xl w-full rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-10 text-white shadow-2xl min-h-[70vh]"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={closeModal}
+            className="absolute right-4 top-4 text-sm px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            aria-label="关闭技能介绍弹窗"
+          >
+            <X size={20} />
+          </button>
+          <h4 className="text-2xl font-bold mb-4">技能介绍</h4>
+          <SkillGraph />
+        </motion.div>
+      </div>
+
+      {/* {showSkillModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6"
           role="dialog"
@@ -336,7 +246,7 @@ export default function About() {
             <SkillGraph />
           </motion.div>
         </div>
-      )}
+      )}修改一下，只加载一次根据showSkillModal的值控制是否隐藏 */}
     </section>
   );
 }

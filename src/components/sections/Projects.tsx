@@ -3,101 +3,23 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ExternalLink, Github, Route, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import projectsData from '@/data/projects.json';
+import ProjectGraph from '@/components/g6/ProjectGraph';
 
-const projects = [
-  {
-    title: '智能电网巡检系统',
-    description:
-      '负责系统前端框架搭建、文档撰写，参与3D模型交互与海康摄像机视频管理。',
-    technologies: [
-      'Vue3',
-      'Three.js',
-      'Scoket',
-      'RTSP',
-      'Blender',
-    ],
-    image: '/imgs/AI1.png',
-    github: 'https://github.com',
-    live: 'https://example.com',
-    featured: true,
-    model: undefined,
-    screenshots: ['/imgs/XJ0.png', '/imgs/XJ1.jpg', '/imgs/XJ2.jpg', '/imgs/XJ3.jpg', '/imgs/XJ4.jpg', '/imgs/XJ5.jpg'],
-  },
-  {
-    title: '工业AI视觉算法平台',
-    description:
-      '负责该项目数据集管理、数据标注等前端开发，实现2D/3D数据Web可视化，并调研相关新技术。',
-    technologies: ['Vue3','Three.js','Echarts','TailWindCss','Canvas',],
-    image: '/imgs/AI2.png',
-    github: 'https://github.com/DongMenKant/canvas-select-plus',
-    live: 'https://www.npmjs.com/package/canvas-select-plus',
-    featured: true,
-    model: undefined,
-    screenshots: ['/imgs/AI0.png', '/imgs/AI1.png','/imgs/AI2.png', '/imgs/AI3.png', '/imgs/AI4.png','/imgs/AI5.png'],
-  },
-  {
-    title: '农村集体三资管理平台',
-    description:
-      '负责前期的需求调研，可视化大屏、管理平台和小程序的前端开发工作。',
-    technologies: ['Vue3', 'UniApp','WotUI','Leaflet','DataV','Echarts'],
-    image: '/imgs/SZ1.png',
-    github: 'https://github.com',
-    live: 'https://example.com',
-    featured: true,
-    model: undefined,
-    screenshots: ['/imgs/SZ1.png'],
-  },
-  {
-    title: '健身日志APP',
-    description:
-      '自研开发健身日志APP，基于Pixso生成设计稿，并使用Uni-app + WotUI + UnoCSS框架开发，用于设置训练计划和记录训练日志。',
-    technologies: ['Uni-app', 'WotUI', ' Next.js', 'MongoDB'],
-    image: '/imgs/AI4.png',
-    github: 'https://github.com/DongMenKant/fitness-diary-vue-uniapp',
-    live: '',
-    featured: false,
-    model: '/models/GasolineBarrel.glb',
-    screenshots: ['/imgs/JS1.png', '/imgs/JS2.png'],
-  },
-  {
-    title: 'Canvas-Select-Plus',
-    description:
-      '基于Canvas开发的2D图像标注组件，简单轻量，支持矩形、多边形、点、折线、圆形、Mask标注，支持复制、撤销、重做、刷子、钢笔等操作，配备SAM智能标注接口。',
-    technologies: ['Canvas', 'JavaScript'],
-    image: '/imgs/AI5.png',
-    github: 'https://github.com/DongMenKant/canvas-select-plus',
-    live: 'https://dongmenkant.github.io/canvas-select-plus/',
-    featured: false,
-    model: '/models/Roadblock.glb',
-    screenshots: ['/imgs/CSP.png'],
-  },
-  {
-    title: 'UE搭建电影级别场景',
-    description:
-      '通过UE5.5.2引擎，利用开源素材和Tripo3D辅助生成的模型，搭建电影级公路场景。',
-    technologies: ['UE5', 'Tripo 3D'],
-    image: '/imgs/AI1.png',
-    github: '',
-    live: '',
-    featured: false,
-    model: undefined,
-    screenshots: ['/imgs/UE1.png', '/imgs/UE2.png', '/imgs/UE3.png', '/imgs/UE4.png'],
-  },
-  {
-    title: '2D像素风横版闯关游戏',
-    description:
-      '通过Unity引擎，利用开源素材开发的像素风游戏，涉及player动画、音效、转场。',
-    technologies: ['Unity', 'C#'],
-    image: '/imgs/AI1.png',
-    github: '',
-    live: '',
-    featured: false,
-    model: undefined,
-    screenshots: ['/imgs/UE1.png', '/imgs/UE2.png', '/imgs/UE3.png', '/imgs/UE4.png'],
-  },
-];
+type Project = {
+  title: string;
+  description: string;
+  technologies: string[];
+  image: string;
+  github: string;
+  live: string;
+  featured: boolean;
+  model: string | null;
+  screenshots: string[];
+};
 
+const projects: Project[] = projectsData as Project[];
 
 export default function Projects() {
   const [selectedProject, setSelectedProject] = useState<(typeof projects)[number] | null>(null);
@@ -187,6 +109,9 @@ export default function Projects() {
     ? modalScreenshots[currentScreenshotIndex % modalScreenshots.length]
     : null;
 
+  const [showProjectModal, setShowProjectModal] = useState(false);
+  const closeModal = () => setShowProjectModal(false);
+
   return (
     <section
       id="projects"
@@ -198,6 +123,13 @@ export default function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           viewport={{ once: true }}
+          className="text-center mt-5"
+        >
+          <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          viewport={{ once: true }}
           className="text-center mt-5 mb-10"
         >
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-black mb-8 text-white">
@@ -205,10 +137,7 @@ export default function Projects() {
               项目经历
             </span>
           </h3>
-          {/* <p className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-light leading-relaxed">
-            Here are some of the projects I&apos;ve worked on, showcasing my
-            skills and creativity
-          </p> */}
+          </motion.div>
         </motion.div>
 
         {selectedProject && (
@@ -307,14 +236,6 @@ export default function Projects() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 mix-blend-overlay opacity-60"></div>
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6">
-                    {/* <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-4 bg-white/20 rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110"
-                    >
-                      <Github size={28} className="text-white" />
-                    </a> */}
                     <button
                       type="button"
                       onClick={() => handleOpenPreview(project)}
@@ -322,6 +243,14 @@ export default function Projects() {
                       aria-label={`Preview ${project.title} gallery`}
                     >
                       <Eye size={28} className="text-white" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowProjectModal(true)}
+                      className="p-4 bg-white/20 rounded-full hover:bg-white/30 transition-all duration-300 transform hover:scale-110"
+                      aria-label={`Preview ${project.title} gallery`}
+                    >
+                      <Route size={28} className="text-white" />
                     </button>
                   </div>
                 </div>
@@ -456,6 +385,39 @@ export default function Projects() {
                 </motion.div>
               ))}
           </div>
+        </motion.div>
+      </div>
+      <div
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6 transition-opacity duration-200 ${
+          showProjectModal ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="项目详情弹窗"
+        aria-hidden={!showProjectModal}
+        onClick={closeModal}
+      >
+        <motion.div
+          initial={false}
+          animate={
+            showProjectModal
+              ? { opacity: 1, scale: 1, y: 0 }
+              : { opacity: 0, scale: 0.95, y: 20 }
+          }
+          transition={{ duration: 0.2 }}
+          className="relative max-w-6xl w-full rounded-3xl bg-white/10 backdrop-blur-xl border border-white/15 p-10 text-white shadow-2xl min-h-[70vh]"
+          onClick={(event) => event.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={closeModal}
+            className="absolute right-4 top-4 text-sm px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            aria-label="关闭技能介绍弹窗"
+          >
+            <X size={20} />
+          </button>
+          <h4 className="text-2xl font-bold mb-4">项目详情</h4>
+          <ProjectGraph />
         </motion.div>
       </div>
     </section>
